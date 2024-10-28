@@ -1,0 +1,392 @@
+#include <stdbool.h>
+#test dec_to_flo_1
+s21_decimal dec = {.bits = {[3] = 0b00000000000000000000000000000000,
+                            [2] = 0b00000000000000000000000000000000,
+                            [1] = 0b00000000000000000000000000000000,
+                            [0] = 0b00000000000000000000000000001000}};
+float flo = 0;
+int err = s21_from_decimal_to_float(dec, &flo);
+ck_assert_int_eq(err, 0);
+ck_assert_float_eq(flo, 8);
+
+#test dec_to_flo_2
+s21_decimal dec = {.bits = {[3] = 0b00000000000000010000000000000000,
+                            [2] = 0b00000000000000000000000000000000,
+                            [1] = 0b00000000000000000000000000000000,
+                            [0] = 0b00000000000000000000000000001000}};
+float flo = 0;
+int err = s21_from_decimal_to_float(dec, &flo);
+ck_assert_int_eq(err, 0);
+ck_assert_float_eq(flo, 0.8);
+
+#test dec_to_flo_3
+s21_decimal dec = {.bits = {[3] = 0b00000000000000100000000000000000,
+                            [2] = 0b00000000000000000000000000000000,
+                            [1] = 0b00000000000000000000000000000000,
+                            [0] = 0b00000000000000000000000000001000}};
+float flo = 0;
+int err = s21_from_decimal_to_float(dec, &flo);
+ck_assert_int_eq(err, 0);
+ck_assert_float_eq(flo, 0.08);
+
+#test dec_to_flo_4
+s21_decimal dec = {.bits = {[3] = 0b00000000000111000000000000000000,
+                            [2] = 0b00000000000000000000000000000000,
+                            [1] = 0b00000000000000000000000000000000,
+                            [0] = 0b00000000000000000000000000001000}};
+float flo = 0;
+int err = s21_from_decimal_to_float(dec, &flo);
+ck_assert_int_eq(err, 0);
+ck_assert_float_eq(flo, 8e-28);
+
+#test dec_to_flo_5
+s21_decimal dec = {.bits = {[3] = 0b00000000000111000000000000000000,
+                            [2] = 0b00000000000000000000000000000000,
+                            [1] = 0b00000000000000000000000000000000,
+                            [0] = 0b10000000000000000000000000001000}};
+float flo = 0;
+int err = s21_from_decimal_to_float(dec, &flo);
+ck_assert_int_eq(err, 0);
+ck_assert_float_eq_tol(flo, 2.14748e-19, 1e-8);
+
+#test dec_to_flo_6
+s21_decimal dec = {.bits = {[3] = 0b00000000000111000000000000000000,
+                            [2] = 0b00000000000000000000000000000000,
+                            [1] = 0b00000000000000000000000000000000,
+                            [0] = 0b00000000000000000000000000000000}};
+float flo = 0;
+int err = s21_from_decimal_to_float(dec, &flo);
+ck_assert_int_eq(err, 0);
+ck_assert_float_eq(flo, 0);
+
+#test dec_to_flo_7
+s21_decimal dec = {.bits = {[3] = 0b10000000000000000000000000000000,
+                            [2] = 0b00000000000000000000000000000000,
+                            [1] = 0b00000000000000000000000000000000,
+                            [0] = 0b00000000000000000000000000000000}};
+float flo = 0;
+int err = s21_from_decimal_to_float(dec, &flo);
+ck_assert_int_eq(err, 0);
+ck_assert_float_eq(flo, 0);
+
+#test dec_to_flo_8
+s21_decimal dec = {.bits = {[3] = 0b00000000000000000000000000000000,
+                            [2] = 0b00000000000000000000000000000000,
+                            [1] = 0b00000000000000000000000000000000,
+                            [0] = 0b00000000000000000000000000000000}};
+float flo = 0;
+int err = s21_from_decimal_to_float(dec, &flo);
+ck_assert_int_eq(err, 0);
+ck_assert_float_eq(flo, 0);
+
+#test dec_to_flo_9
+s21_decimal dec = {.bits = {[3] = 0b10000000000000000000000000000000,
+                            [2] = 0b00000000000000000000000000000000,
+                            [1] = 0b00000000000000000000000000000000,
+                            [0] = 0b00000000000000000000000000000001}};
+float flo = 0;
+int err = s21_from_decimal_to_float(dec, &flo);
+ck_assert_int_eq(err, 0);
+ck_assert_float_eq(flo, -1);
+
+#test dec_to_flo_10
+s21_decimal dec = {.bits = {[3] = 0b10000000000000100000000000000000,
+                            [2] = 0b00000000000000000000000000000000,
+                            [1] = 0b00000000000000000000000000000000,
+                            [0] = 0b00000000000000000000000000000001}};
+float flo = 0;
+int err = s21_from_decimal_to_float(dec, &flo);
+ck_assert_int_eq(err, 0);
+ck_assert_float_eq(flo, -0.01);
+
+#test dec_to_flo_13
+s21_decimal dec = {.bits = {[3] = 0b10000000000000110000000000000000,
+                            [2] = 0b00000000000000000000000000000000,
+                            [1] = 0b00000000000000000000000000000000,
+                            [0] = 0b00000000000000000000000000000001}};
+float flo = 0;
+int err = s21_from_decimal_to_float(dec, &flo);
+ck_assert_int_eq(err, 0);
+ck_assert_float_eq_tol(flo, -0.001, 1e-8);
+
+#test dec_to_flo_14
+s21_decimal dec = {.bits = {[3] = 0b10000000000000110000000000000000,
+                            [2] = 0b00000000000000000000000000000000,
+                            [1] = 0b00000000000000000000000000000000,
+                            [0] = 0b00000000000000000000000000000001}};
+float flo = 0;
+int err = s21_from_decimal_to_float(dec, &flo);
+ck_assert_int_eq(err, 0);
+ck_assert_float_eq_tol(flo, -0.001, 1e-8);
+
+#test dec_to_flo_15
+s21_decimal dec = {.bits = {[3] = 0b10000000000000110000000000000000,
+                            [2] = 0b00000000000000000000000000000000,
+                            [1] = 0b00000000000000000000000000000000,
+                            [0] = 0b00000000000000000000000001100100}};
+float flo = 0;
+int err = s21_from_decimal_to_float(dec, &flo);
+ck_assert_int_eq(err, 0);
+ck_assert_float_eq(flo, -0.1);
+
+#test dec_to_flo_16
+s21_decimal dec = {.bits = {[3] = 0b10000000000000110000000000000000,
+                            [2] = 0b00000000000000000000000000000000,
+                            [1] = 0b00000000000000000000000000000000,
+                            [0] = 0b00000000000000000000000000001010}};
+float flo = 0;
+int err = s21_from_decimal_to_float(dec, &flo);
+ck_assert_int_eq(err, 0);
+ck_assert_float_eq(flo, -0.01);
+
+#test dec_to_flo_18
+s21_decimal dec = {.bits = {[3] = 0b10000000000011110000000000000000,
+                            [2] = 0b00000000000000000000000000000000,
+                            [1] = 0b00000000000000000000000000000000,
+                            [0] = 0b00000000000000000000000000000010}};
+float flo = 0;
+int err = s21_from_decimal_to_float(dec, &flo);
+ck_assert_int_eq(err, 0);
+ck_assert_float_eq_tol(flo, -2e-15, 1e-7);
+
+#test dec_to_flo_20
+s21_decimal dec = {.bits = {[3] = 0b10000000000010110000000000000000,
+                            [2] = 0b00000000000000000000000000000000,
+                            [1] = 0b00000000000000000000000000000000,
+                            [0] = 0b11111111111111111111111111111111}};
+float flo = 0;
+int err = s21_from_decimal_to_float(dec, &flo);
+ck_assert_int_eq(err, 0);
+ck_assert_float_eq_tol(flo, -0.0429497, 1e-7);
+
+#test dec_to_flo_21
+s21_decimal dec = {.bits = {[3] = 0b10000000000111100000000000000000,
+                            [2] = 0b00000000000000000000000000000000,
+                            [1] = 0b00000000000000000000000000000000,
+                            [0] = 0b01001001001001001001001001001001}};
+float flo = 0;
+int err = s21_from_decimal_to_float(dec, &flo);
+ck_assert_int_eq(err, 1);
+#test dec_to_flo_22
+s21_decimal dec = {.bits = {[3] = 0b10000111110001100000000000000000,
+                            [2] = 0b00000000000000000000000000000000,
+                            [1] = 0b00000000000000000000000000000000,
+                            [0] = 0b01001001001001001001001001001001}};
+float flo = 0;
+int err = s21_from_decimal_to_float(dec, &flo);
+ck_assert_int_eq(err, 1);
+
+#test dec_to_flo_23
+s21_decimal dec = {7, 8, 8, 9};
+float flo = 0;
+int err = s21_from_decimal_to_float(dec, &flo);
+ck_assert_int_eq(err, 1);
+
+/// examples from_float_to_decimal 0 -0.0f  -100000f -1234.5678f 1234.56789
+/// +1234.56789
+
+#test float_to_dec_1
+s21_decimal dec1 = {.bits = {[3] = 0b00000000000000000000000000000000,
+                             [2] = 0b00000000000000000000000000000000,
+                             [1] = 0b00000000000000000000000000000000,
+                             [0] = 0b00000000000000000000000000000000}};
+s21_decimal dec2;
+float flo = 0;
+int err = s21_from_float_to_decimal(flo, &dec2);
+ck_assert_int_eq(err, 0);
+ck_assert_int_eq(dec1.bits[0], dec2.bits[0]);
+ck_assert_int_eq(dec1.bits[1], dec2.bits[1]);
+ck_assert_int_eq(dec1.bits[2], dec2.bits[2]);
+ck_assert_int_eq(dec1.bits[3], dec2.bits[3]);
+
+#test float_to_dec_2
+s21_decimal dec1 = {.bits = {[3] = 0b10000000000000000000000000000000,
+                             [2] = 0b00000000000000000000000000000000,
+                             [1] = 0b00000000000000000000000000000000,
+                             [0] = 0b00000000000000000000000000000000}};
+s21_decimal dec2;
+float flo = -0.0f;
+int err = s21_from_float_to_decimal(flo, &dec2);
+ck_assert_int_eq(err, 1);
+
+#test float_to_dec_3
+s21_decimal dec1 = {0b00000000000000011000011010100000, 0, 0,
+                    0b10000000000000000000000000000000};
+s21_decimal dec2;
+float flo = -100000;
+int err = s21_from_float_to_decimal(flo, &dec2);
+int scale = s21_scale_s21_decimal(dec2) * 10;
+ck_assert_int_eq(err, 0);
+ck_assert_int_eq(dec1.bits[0], (dec2.bits[0] / scale));
+ck_assert_int_eq(dec1.bits[1], dec2.bits[1]);
+ck_assert_int_eq(dec1.bits[2], dec2.bits[2]);
+
+#test float_to_dec_4
+s21_decimal dec1 = {0b00000000000100101101011010001000, 0, 0,
+                    0b10000000000000110000000000000000};
+s21_decimal dec2;
+float flo = -1234.5678f;
+int err = s21_from_float_to_decimal(flo, &dec2);
+ck_assert_int_eq(err, 0);
+ck_assert_int_eq(dec1.bits[0], dec2.bits[0]);
+ck_assert_int_eq(dec1.bits[1], dec2.bits[1]);
+ck_assert_int_eq(dec1.bits[2], dec2.bits[2]);
+ck_assert_int_eq(dec1.bits[3], dec2.bits[3]);
+
+#test float_to_dec_5
+s21_decimal val = {{0, 0, 0, 0}};
+float res = 0.;
+float flo = -1234.56789;
+int err1 = s21_from_float_to_decimal(flo, &val);
+int err2 = s21_from_decimal_to_float(val, &res);
+char buf1[100];
+char buf2[100];
+sprintf(buf1, "%.3f", flo);
+sprintf(buf2, "%.3f", res);
+ck_assert_int_eq(err1, 0);
+ck_assert_int_eq(err2, 0);
+ck_assert_str_eq(buf1, buf2);
+
+#test float_to_dec_6
+s21_decimal val = {{0, 0, 0, 0}};
+float res = 0.;
+float flo = 1234.56789;
+int err1 = s21_from_float_to_decimal(flo, &val);
+int err2 = s21_from_decimal_to_float(val, &res);
+char buf1[100];
+char buf2[100];
+sprintf(buf1, "%.3f", flo);
+sprintf(buf2, "%.3f", res);
+ck_assert_int_eq(err1, 0);
+ck_assert_int_eq(err2, 0);
+ck_assert_str_eq(buf1, buf2);
+
+#test float_to_dec_7
+float flo = 1234.56789;
+int err1 = s21_from_float_to_decimal(flo, NULL);
+ck_assert_int_eq(err1, 1);
+
+#test float_to_dec_8
+s21_decimal dec = {0};
+float flo = 0.0 / 0.0;
+int err1 = s21_from_float_to_decimal(flo, &dec);
+ck_assert_int_eq(err1, 1);
+flo = 0.0;
+err1 = s21_from_float_to_decimal(flo, &dec);
+ck_assert_int_eq(err1, 0);
+
+#test float_to_dec_9
+s21_decimal my_dec = {0};
+int b1 = 0b11100;
+long int b0 = 0b10111110100110010100010100000000;
+float flo = 1234.56789e8;
+int err1 = s21_from_float_to_decimal(flo, &my_dec);
+ck_assert_int_eq(err1, 0);
+ck_assert_int_eq(my_dec.bits[0], b0);
+ck_assert_int_eq(my_dec.bits[1], b1);
+
+#test from_int_to_dec_1
+s21_decimal dec1;
+int tmp1 = 100;
+int res_s21 = 0;
+s21_decimal res1;
+int err1 = s21_from_int_to_decimal(tmp1, NULL);
+ck_assert_int_eq(err1, 1);
+
+#test from_int_to_dec_2
+s21_decimal dec2 = {.bits = {[3] = 0b10000000000000000000000000000000,
+                             [2] = 0b00000000000000000000000000000000,
+                             [1] = 0b00000000000000000000000000000000,
+                             [0] = 0b00000000000000000000000001100011}};
+s21_decimal dec1 = {0};
+int tmp1 = -99;
+int err1 = s21_from_int_to_decimal(tmp1, &dec1);
+ck_assert_int_eq(err1, 0);
+ck_assert_int_eq(dec2.bits[0], dec1.bits[0]);
+ck_assert_int_eq(dec2.bits[3], dec1.bits[3]);
+
+#test from_int_to_dec_3
+s21_decimal dec2 = {.bits = {[3] = 0b00000000000000000000000000000000,
+                             [2] = 0b00000000000000000000000000000000,
+                             [1] = 0b00000000000000000000000000000000,
+                             [0] = 0b01111111111111111111111111111111}};
+s21_decimal dec1 = {0};
+int tmp1 = 2147483647;
+int err1 = s21_from_int_to_decimal(tmp1, &dec1);
+ck_assert_int_eq(err1, 0);
+ck_assert_int_eq(dec2.bits[0], dec1.bits[0]);
+ck_assert_int_eq(dec2.bits[3], dec1.bits[3]);
+#test from_int_to_dec_4
+s21_decimal dec2 = {.bits = {[3] = 0b10000000000000000000000000000000,
+                             [2] = 0b00000000000000000000000000000000,
+                             [1] = 0b00000000000000000000000000000000,
+                             [0] = 0b10000000000000000000000000000000}};
+s21_decimal dec1 = {0};
+int tmp1 = -2147483648;
+int err1 = s21_from_int_to_decimal(tmp1, &dec1);
+ck_assert_int_eq(err1, 0);
+ck_assert_int_eq(dec2.bits[0], dec1.bits[0]);
+ck_assert_int_eq(dec2.bits[3], dec1.bits[3]);
+#test s21_from_decimal_to_int1
+s21_decimal s21_dec = {.bits = {[3] = 0b10000000000000000000000000000000,
+                                [2] = 0b00000000000000000000000000000000,
+                                [1] = 0b00000000000000000000000000000000,
+                                [0] = 0b00000000000100101101011010000111}};
+int s21_number = -1234567;
+int my_number;
+int err = s21_from_decimal_to_int(s21_dec, &my_number);
+ck_assert_int_eq(err, 0);
+ck_assert_int_eq(my_number, s21_number);
+
+#test s21_from_decimal_to_int2
+s21_decimal s21_dec = {.bits = {[3] = 0b10000000000000000000000000000000,
+                                [2] = 0b00000000000000000000000000000000,
+                                [1] = 0b00000000000000000000000000000000,
+                                [0] = 0b10000000000000000000000000000000}};
+int s21_number = -2147483648;
+int my_number;
+int err = s21_from_decimal_to_int(s21_dec, &my_number);
+ck_assert_int_eq(err, 0);
+ck_assert_int_eq(my_number, s21_number);
+
+#test s21_from_decimal_to_int3
+s21_decimal s21_dec = {.bits = {[3] = 0b00000000000000000000000000000000,
+                                [2] = 0b00000000000000000000000000000000,
+                                [1] = 0b00000000000000000000000000000000,
+                                [0] = 0b01111111111111111111111111111111}};
+int s21_number = 2147483647;
+int my_number;
+int err = s21_from_decimal_to_int(s21_dec, &my_number);
+ck_assert_int_eq(err, 0);
+ck_assert_int_eq(my_number, s21_number);
+
+#test s21_from_decimal_to_int4
+s21_decimal s21_dec = {.bits = {[3] = 0b00000000000000000000000000000000,
+                                [2] = 0b00000000000000000000000000000000,
+                                [1] = 0b00000000000000000000000000000000,
+                                [0] = 0b00000101010100010110000100101100}};
+int s21_number = 89219372;
+int my_number;
+int err = s21_from_decimal_to_int(s21_dec, &my_number);
+ck_assert_int_eq(err, 0);
+ck_assert_int_eq(my_number, s21_number);
+
+#test s21_from_decimal_to_int5
+s21_decimal s21_dec = {.bits = {[3] = 0b00000000000000000000000000000000,
+                                [2] = 0b00000000000000000000000000000000,
+                                [1] = 0b00000000000000000000000000000000,
+                                [0] = 0b00000101010100010110000100101100}};
+int s21_number = 89219372;
+int my_number;
+int err = s21_from_decimal_to_int(s21_dec, NULL);
+ck_assert_int_eq(err, 1);
+
+#test s21_from_decimal_to_int6
+s21_decimal s21_dec = {.bits = {[3] = 0b00000000000000000000000000000000,
+                                [2] = 0b00000000000000000000000000000000,
+                                [1] = 0b00111111110000000000000000000000,
+                                [0] = 0b00000101010100010110000100101100}};
+
+int my_number;
+int err = s21_from_decimal_to_int(s21_dec, &my_number);
+ck_assert_int_eq(err, 1);
