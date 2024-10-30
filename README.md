@@ -1,6 +1,48 @@
 # s21_decimal 
 
-Implementation of your own s21_decimal.h library using big decimal and macroses to use it.
+Целью этого задания является написание типа данных для точных финансовых расчетов - децимал.Я нашла 3 способа решения этой задачи: Binary-coded decimal, Big decimal, Int_128.
+Последнее было запрещено по заданию, да и нашей команде хотелось поработать с битовыми операциями, так что проект мы написали на основе big_decimal.
+
+Биты записали через массив unsigned, чтобы быть в пределах натуральных чисел(и при переполнении не вылетать в минус), поскольку знак записыватся в 3-м бите:
+```
+typedef struct s21_decimal {
+  unsigned bits[4];
+} s21_decimal;
+
+typedef struct s21_big_decimal {
+  unsigned bits[7];
+} s21_big_decimal;
+```
+Третий bits[3] мы разбили, чтобы иметь возможность изменять и запрашивать scale - степень и sign - знак (общая сумма битов равна 32 (16 + 8 + 7 + 1), что соответствует размеру int), каждой переменной мы назначили определенное колическтво битов, сверху вниз, то есть от 0 - 15 бита переменной number будет отведено нулям, от 16 до 24 - знаку:
+```
+typedef union s21_decimal_bit3 {
+  int number;
+  struct {
+    unsigned zero_2 : 16;
+    unsigned scale : 8;
+    unsigned zero_1 : 7;
+    unsigned sign : 1;
+  } part;
+} s21_scale_sign;
+```
+Обращаться к этой структуре можно с помощью конструкции:
+```
+s21_scale_sign pointer;
+pointer.part.scale = 5;
+printf( "%d" ,pointer.part.sign);
+```
+
+Нашим желанием было не допустить дублирований, которых в какой-то момент стало слишком много, поскольку приходилось писать функции по поиску знака для s21_decimal и такую же для s21_big_decimal, поэтому было принято решение все побитовые и арифметические операцие, использующиеся обоими типами написать на макросах.
+Конструкция decimal.bits[(int)(sizeof(TypeName) / sizeof(unsigned) - 1)] необходима для  поиска и установки знакового и степенного бита, результат этого выражения для s21_decimal будет равен 3, а для биг децимал 6.
+```
+#define S21_SCALE(TypeName)                                           \
+  int s21_scale_##TypeName(TypeName decimal) {                        \
+    s21_scale_sign pointer;                                           \
+    pointer.number =                                                  \
+        decimal.bits[(int)(sizeof(TypeName) / sizeof(unsigned) - 1)]; \
+    return pointer.part.scale;                                        \
+  }
+```
 
 
 ## Information
